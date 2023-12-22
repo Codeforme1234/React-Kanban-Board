@@ -3,6 +3,7 @@ import axios from "axios";
 import StatusCard from "./Cards/StatusCard";
 import PriorityCard from "./Cards/PriorityCard";
 import UserCard from "./Cards/UserCard";
+import UserHeader from "./Headings";
 
 function TicketsContainer() {
   const [data, setData] = useState({ tickets: [], users: [] });
@@ -148,12 +149,14 @@ function TicketsContainer() {
         )}
       </div>
       <div className="w-full max-h-screen ">
-        <div className=" bg-slate-50 p-3 m-2 mt-5 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="bg-slate-50 p-3 m-2 mt-5 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {Object.entries(groupedTickets).map(([group, tickets]) => (
             <div key={group} className="col-span-1">
-              <h2 className="text-gray-900 pl-8 font-semibold text-lg mb-2 ">
-                {getHeading(group)}
-              </h2>
+              <UserHeader
+                group={group}
+                getHeading={getHeading}
+                alertCount={tickets.length} // Using the length of tickets array as the count
+              />
               {tickets.map((ticket) => renderCard(ticket))}
             </div>
           ))}
