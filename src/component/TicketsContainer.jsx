@@ -156,6 +156,7 @@ function TicketsContainer() {
                 group={group}
                 getHeading={getHeading}
                 alertCount={tickets.length} // Using the length of tickets array as the count
+                grouping={grouping}
               />
               {tickets.map((ticket) => renderCard(ticket))}
             </div>
