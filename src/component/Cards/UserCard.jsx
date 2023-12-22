@@ -1,25 +1,30 @@
-
-  
-const UserCard = ({ticket}) => {
-        return (
-          <div className="bg-white rounded-lg shadow-md p-4 flex flex-col m-5 items-start w-64">
-            <div className="flex justify-between items-center w-full mb-3">
-              <span className="font-bold text-gray-800">{ticket.id}</span>
-              <span className="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded-full">
-                {ticket.alert && <i className="fas fa-exclamation"></i>}
-              </span>
-            </div>
-            <h4 className="text-gray-900 font-bold text-lg mb-2">{ticket.title}</h4>
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center">
-                <span className="text-gray-400 mr-2">
-                  <i className="far fa-circle"></i> {/* This icon can be replaced with the actual icon you're using */}
-                </span>
-                <span className="text-gray-500 text-sm">Feature request</span>
-              </div>
-            </div>
+const UserCard = ({ ticket }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col m-5 items-start w-[17.5em]">
+      <div className="flex justify-between items-center w-full mb-3">
+        <span className="font-normal text-gray-500">{ticket.id}</span>
+      </div>
+      <div className="flex ">
+        <div className="w-3 mt-1.5 absolute h-3 rounded-full bg-yellow-400 ">
+          <div className="h-[6.5px] w-[6px] bg-white"></div>
+        </div>
+        <h4 className="text-gray-900 font-semibold text-[1em] pb-2 left-4 relative">
+          {ticket.title}
+        </h4>
+      </div>
+      <div className="flex items-center justify-between w-full">
+        <div className="flex items-center">
+          <div className="flex gap-2">
+            <div className="w-6 relative h-6 rounded-sm border-gray-300 border-[1.5px]"></div>
+            <span className="text-gray-500 border-[1.5px] flex gap-2 px-2 text-sm">
+              <div className="w-[13px] h-[13px] flex relative top-1 bg-gray-500 rounded-full"></div>
+              <h1>{ticket.tag}</h1>
+            </span>
           </div>
-        );      
-  };
-  
-  export default UserCard;
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserCard;
