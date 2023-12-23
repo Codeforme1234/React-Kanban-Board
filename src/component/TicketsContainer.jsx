@@ -184,7 +184,7 @@ function TicketsContainer() {
         </button>
 
         {showDropdown && (
-          <div className="absolute left-0 mt-1 bg-white border rounded shadow-lg z-50 py-4 w-full md:w-1/4">
+          <div className="absolute  mt-1 bg-white border rounded shadow-lg z-50 py-4 w-full md:w-1/4">
             <div className="px-4 py-2">
               <label
                 htmlFor="groupingSelect"
