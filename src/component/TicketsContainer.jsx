@@ -1,14 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import StatusCard from "./Cards/StatusCard";
 import PriorityCard from "./Cards/PriorityCard";
 import UserCard from "./Cards/UserCard";
 import UserHeader from "./Headings";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 
 function TicketsContainer() {
   const [data, setData] = useState({ tickets: [], users: [] });
   const [grouping, setGrouping] = useState("status");
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const priorityMapping = {
     0: "No Priority",
@@ -58,8 +74,16 @@ function TicketsContainer() {
         "https://tfyincvdrafxe7ut2ziwuhe5cm0xvsdu.lambda-url.ap-south-1.on.aws/ticketAndUsers"
       )
       .then((response) => {
+        const normalizedTickets = response.data.tickets.map((ticket) => ({
+          ...ticket,
+          status:
+            Object.keys(statusMapping).find(
+              (key) =>
+                statusMapping[key].toLowerCase() === ticket.status.toLowerCase()
+            ) || ticket.status,
+        }));
         setData({
-          tickets: response.data.tickets || [],
+          tickets: normalizedTickets || [],
           users: response.data.users || [],
         });
       })
@@ -87,24 +111,48 @@ function TicketsContainer() {
     }
   };
 
-  const groupedTickets = data.tickets.reduce((acc, ticket) => {
-    let key =
-      grouping === "user" ? getUserById(ticket.userId) : ticket[grouping];
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(ticket);
-    return acc;
-  }, {});
+  // Initialize only when grouping by 'status'
+  const initialGroupedTickets =
+    grouping === "status"
+      ? Object.keys(statusMapping).reduce((acc, status) => {
+          acc[statusMapping[status]] = [];
+          return acc;
+        }, {})
+      : {};
+
+  const groupedTickets = data.tickets.reduce(
+    (acc, ticket) => {
+      let key =
+        grouping === "user" ? getUserById(ticket.userId) : ticket[grouping];
+      if (grouping === "status") {
+        // Convert status keys like 'inProgress' to 'In Progress'
+        key = statusMapping[key] || key;
+      }
+      // Ensure keys are mapped for 'status' grouping, otherwise use ticket value directly
+      acc[key] = acc[key] || [];
+      acc[key].push(ticket);
+      return acc;
+    },
+    grouping === "status" ? initialGroupedTickets : {}
+  );
 
   return (
     <>
-      <div className=" m-4 relative z-50">
+      <div className=" m-4 relative z-50" ref={dropdownRef} >
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className="bg-white p-2 w-20 rounded border shadow text-gray-800 font-medium"
+          className="bg-white p-1 w-40 rounded border shadow text-gray-800 font-medium flex items-center justify-between"
         >
-          Display
+          <FontAwesomeIcon icon={faBars} className="pl-1" />
+          <div className=" p-1 text-gray-800 font-normal text-xl  ">
+            Display
+          </div>
+          <FontAwesomeIcon
+            icon={faCaretDown}
+            className={` pr-2 transform transition-transform ${
+              showDropdown ? "rotate-180" : ""
+            }`}
+          />
         </button>
 
         {showDropdown && (
@@ -155,7 +203,7 @@ function TicketsContainer() {
               <UserHeader
                 group={group}
                 getHeading={getHeading}
-                alertCount={tickets.length} // Using the length of tickets array as the count
+                alertCount={tickets.length}
                 grouping={grouping}
               />
               {tickets.map((ticket) => renderCard(ticket))}

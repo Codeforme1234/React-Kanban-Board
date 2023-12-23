@@ -22,7 +22,7 @@ const UserHeader = ({ group, getHeading, alertCount, grouping }) => {
 
   return (
     <div className="flex justify-between items-center p-2">
-      <CategoryIcon type={grouping} value={iconValue} />
+      <CategoryIcon className="pl-4" type={grouping} value={iconValue} />
       <h2 className="text-gray-900 font-semibold text-s">
         {getHeading(group)} - {alertCount} {/* Displaying the count */}
       </h2>
@@ -33,12 +33,14 @@ const UserHeader = ({ group, getHeading, alertCount, grouping }) => {
             {alertCount}
           </span>
         )}
-        <FontAwesomeIcon icon={faAdd} className="text-gray-500 text-s" />
+        <div className="pr-4">
+          <FontAwesomeIcon icon={faAdd} className="text-gray-500 text-s" />
 
-        <FontAwesomeIcon
-          icon={faEllipsisH}
-          className="text-gray-500 text-s ml-2"
-        />
+          <FontAwesomeIcon
+            icon={faEllipsisH}
+            className="text-gray-500 text-s ml-2"
+          />
+        </div>
       </div>
     </div>
   );

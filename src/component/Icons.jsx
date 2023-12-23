@@ -8,19 +8,21 @@ import {
   faFlag,
 } from "@fortawesome/free-solid-svg-icons";
 
-const CategoryIcon = ({ type, value }) => {
+const CategoryIcon = ({ type, value, className }) => {
   const priorityIcons = {
-    Urgent: faExclamationTriangle,
-    High: faFlag,
-    Medium: faExclamationTriangle,
-    Low: faFlag,
-    "No Priority": faTasks,
+    0: faExclamationTriangle,
+    1: faFlag,
+    2: faTasks,
+    3: faFlag,
+    4: faExclamationTriangle,
   };
 
   const statusIcons = {
-    Busy: faTasks,
-    Urgent: faBug,
-    // ... other statuses
+    Backlog: faTasks,
+    Todo: faBug,
+    "In Progress": faTasks,
+    Done: faBug,
+    Cancelled: faTasks,
   };
 
   const getInitialsIcon = (initials) => {
@@ -42,7 +44,9 @@ const CategoryIcon = ({ type, value }) => {
     }
   };
 
-  return <div className="text-lg text-gray-600">{renderIcon()}</div>;
+  return (
+    <div className={`text-lg text-gray-600 ${className}`}>{renderIcon()}</div>
+  );
 };
 
 export default CategoryIcon;

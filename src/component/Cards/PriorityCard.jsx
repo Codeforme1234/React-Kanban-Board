@@ -1,4 +1,8 @@
+import CategoryIcon from "../Icons";
+
 const PriorityCard = ({ ticket }) => {
+  const iconValue = ticket.status;
+
   return (
     <div className="bg-white rounded-lg m-4 shadow-md p-4 flex flex-col items-start w-[18em]">
       <div className="flex justify-between items-center w-full mb-3">
@@ -12,14 +16,14 @@ const PriorityCard = ({ ticket }) => {
         </div>
       </div>
       <div className="flex ">
-        <div className="w-3 mt-1.5 absolute h-3 rounded-full bg-yellow-400 ">
-          <div className="h-[6.5px] w-[6px] bg-white"></div>
+        <div className="w-5 mt-1.5 absolute h-3 rounded-full ">
+          <CategoryIcon className="" type="status" value={iconValue} />
         </div>
-        <h4 className="text-gray-900 font-semibold text-[1em] pb-2 left-4 relative">
+        <h4 className="text-gray-900 pt-2 pl-2.5 font-semibold text-[1em] pb-2 left-4 relative">
           {ticket.title}
         </h4>
       </div>
-      <div className="flex items-center justify-between w-full">
+      <div className="pt-2 flex items-center justify-between w-full">
         <span className="text-gray-500 border-[1.5px] flex gap-2 px-2 text-sm">
           <div className="w-[13px] h-[13px] flex relative top-1 bg-gray-500 rounded-full"></div>
           <h1>{ticket.tag}</h1>
