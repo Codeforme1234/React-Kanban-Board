@@ -12,7 +12,7 @@ function TicketsContainer() {
   const [grouping, setGrouping] = useState("status");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -40,23 +40,6 @@ function TicketsContainer() {
     inProgress: "In Progress",
     done: "Done",
     cancelled: "Cancelled",
-  };
-
-  const handleOrderChange = (e) => {
-    const orderType = e.target.value;
-    // Create a new object to hold the sorted tickets within each group
-    const sortedGroupedTickets = { ...groupedTickets };
-
-    // Iterate over each group and sort the tickets within that group
-    for (const group in sortedGroupedTickets) {
-      sortedGroupedTickets[group] = sortTickets(
-        sortedGroupedTickets[group],
-        orderType
-      );
-    }
-
-    // Update the state with the newly sorted grouped tickets
-    setGroupedTickets(sortedGroupedTickets);
   };
 
   const getHeading = (key) => {
@@ -102,12 +85,16 @@ function TicketsContainer() {
   };
 
   const renderCard = (ticket) => {
+    // Find the user's name by userId
+    const user = data.users.find((u) => u.id === ticket.userId);
+    const userName = user ? user.name : "NA"; // If user not found, use a placeholder
+
     if (grouping === "status") {
-      return <StatusCard key={ticket.id} ticket={ticket} />;
+      return <StatusCard key={ticket.id} ticket={ticket} user={userName} />;
     } else if (grouping === "priority") {
-      return <PriorityCard key={ticket.id} ticket={ticket} />;
+      return <PriorityCard key={ticket.id} ticket={ticket} user={userName} />;
     } else if (grouping === "user") {
-      return <UserCard key={ticket.id} ticket={ticket} />;
+      return <UserCard key={ticket.id} ticket={ticket} user={userName} />;
     }
   };
 
@@ -136,12 +123,53 @@ function TicketsContainer() {
     grouping === "status" ? initialGroupedTickets : {}
   );
 
+  const handleOrderChange = (e) => {
+    const orderType = e.target.value;
+    // Create a new object to hold the sorted tickets within each group
+    const sortedGroupedTickets = { ...groupedTickets };
+
+    const sortTickets = (tickets, sortBy) => {
+      if (sortBy === "priority") {
+        // Sort by priority in descending order
+        return tickets.slice().sort((a, b) => b.priority - a.priority);
+      } else if (sortBy === "title") {
+        // Sort by title in ascending order
+        return tickets.slice().sort((a, b) => a.title.localeCompare(b.title));
+      }
+      return tickets; // If no sort type is provided, return the tickets as they are
+    };
+
+    // Iterate over each group and sort the tickets within that group
+    Object.keys(sortedGroupedTickets).forEach((group) => {
+      sortedGroupedTickets[group] = sortTickets(
+        sortedGroupedTickets[group],
+        orderType
+      );
+    });
+
+    // Update the state with the newly sorted grouped tickets
+    setData({ ...data, tickets: Object.values(sortedGroupedTickets).flat() });
+  };
+
+  useEffect(() => {
+    // Load saved state from localStorage
+    const savedGrouping = localStorage.getItem("grouping");
+    if (savedGrouping) {
+      setGrouping(savedGrouping);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save the current state to localStorage whenever it changes
+    localStorage.setItem("grouping", grouping);
+  }, [grouping]);
+
   return (
     <>
-      <div className=" m-4 relative z-50" ref={dropdownRef} >
+      <div className=" mt-4 overflow-x-hidden px-6 z-40" ref={dropdownRef}>
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className="bg-white p-1 w-40 rounded border shadow text-gray-800 font-medium flex items-center justify-between"
+          className="bg-white p-1 rounded-md border shadow-md text-gray-800 font-medium flex items-center gap-2"
         >
           <FontAwesomeIcon icon={faBars} className="pl-1" />
           <div className=" p-1 text-gray-800 font-normal text-xl  ">
@@ -149,14 +177,14 @@ function TicketsContainer() {
           </div>
           <FontAwesomeIcon
             icon={faCaretDown}
-            className={` pr-2 transform transition-transform ${
+            className={`  transform transition-transform ${
               showDropdown ? "rotate-180" : ""
             }`}
           />
         </button>
 
         {showDropdown && (
-          <div className="absolute w-1/4 left-0 mt-1 bg-white border rounded shadow-lg py-2">
+          <div className="absolute left-0 mt-1 bg-white border rounded shadow-lg z-50 py-4 w-full md:w-1/4">
             <div className="px-4 py-2">
               <label
                 htmlFor="groupingSelect"
@@ -196,20 +224,18 @@ function TicketsContainer() {
           </div>
         )}
       </div>
-      <div className="w-full max-h-screen ">
-        <div className="bg-slate-50 p-3 m-2 mt-5 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-          {Object.entries(groupedTickets).map(([group, tickets]) => (
-            <div key={group} className="col-span-1">
-              <UserHeader
-                group={group}
-                getHeading={getHeading}
-                alertCount={tickets.length}
-                grouping={grouping}
-              />
-              {tickets.map((ticket) => renderCard(ticket))}
-            </div>
-          ))}
-        </div>
+      <div className="bg-slate-50 p-3 mx-2 my-5 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        {Object.entries(groupedTickets).map(([group, tickets]) => (
+          <div key={group} className="col-span-1">
+            <UserHeader
+              group={group}
+              getHeading={getHeading}
+              alertCount={tickets.length}
+              grouping={grouping}
+            />
+            {tickets.map((ticket) => renderCard(ticket))}
+          </div>
+        ))}
       </div>
     </>
   );

@@ -1,16 +1,24 @@
 import CategoryIcon from "../Icons";
 
-const PriorityCard = ({ ticket }) => {
+const getInitials = (string) => {
+  return string
+    .split(" ")
+    .map((word) => word.charAt(0))
+    .join("")
+    .toUpperCase();
+};
+
+const PriorityCard = ({ ticket, user }) => {
   const iconValue = ticket.status;
 
   return (
-    <div className="bg-white rounded-lg m-4 shadow-md p-4 flex flex-col items-start w-[18em]">
+    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col m-5 items-start max-w-[18em] w-full">
       <div className="flex justify-between items-center w-full mb-3">
         <span className="font-normal text-gray-500">{ticket.id}</span>
-        <div className="w-5 h-5 bg-green-800 rounded-full">
+        <div className="w-5 h-5 bg-gray-400 rounded-full">
           {ticket.alert && <i className="fas fa-exclamation"></i>}
           <h1 className=" text-[11px] flex justify-center h-[100%] items-center font-semibold text-white">
-            GS
+            {getInitials(user)}
           </h1>
           <div className="w-[9px] h-[9px] flex relative left-3 -top-[7px] bg-slate-600 border-white border-[1px] rounded-full"></div>
         </div>

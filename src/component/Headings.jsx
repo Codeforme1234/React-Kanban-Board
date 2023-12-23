@@ -10,13 +10,11 @@ import CategoryIcon from "./Icons";
 const UserHeader = ({ group, getHeading, alertCount, grouping }) => {
   let iconValue;
   if (grouping === "user") {
-    // Extract initials for the user
     iconValue = group
       .split(" ")
       .map((name) => name[0])
       .join("");
   } else {
-    // For priority and status, the value is the group itself
     iconValue = group;
   }
 
@@ -33,7 +31,7 @@ const UserHeader = ({ group, getHeading, alertCount, grouping }) => {
             {alertCount}
           </span>
         )}
-        <div className="pr-4">
+        <div className="pr-6">
           <FontAwesomeIcon icon={faAdd} className="text-gray-500 text-s" />
 
           <FontAwesomeIcon

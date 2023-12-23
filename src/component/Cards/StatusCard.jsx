@@ -19,7 +19,7 @@ function generateRandomColor() {
   return color;
 }
 
-const StatusCard = ({ ticket }) => {
+const StatusCard = ({ ticket, user }) => {
   const iconValue = ticket.priority;
 
   const [randomColor, setRandomColor] = useState(generateRandomColor());
@@ -29,7 +29,7 @@ const StatusCard = ({ ticket }) => {
   }, []);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col m-5  items-start w-[18em]">
+    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col m-5 items-start max-w-[18em] w-full">
       <div className="flex justify-between items-center w-full mb-3">
         <span className="font-normal text-gray-500">{ticket.id}</span>
         <div
@@ -38,7 +38,7 @@ const StatusCard = ({ ticket }) => {
         >
           {ticket.alert && <i className="fas fa-exclamation"></i>}
           <h1 className=" text-[11px] flex justify-center h-[100%] items-center font-semibold text-white">
-            DT
+            {getInitials(user)}
           </h1>
           <div className="w-[9px] h-[9px] flex relative left-3 -top-[7px] bg-slate-600 border-white border-[1px] rounded-full"></div>
         </div>

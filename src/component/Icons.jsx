@@ -23,12 +23,17 @@ const CategoryIcon = ({ type, value, className }) => {
     "In Progress": faTasks,
     Done: faBug,
     Cancelled: faTasks,
+    backlog: faTasks,
+    todo: faBug,
+    inProgress: faTasks,
+    done: faBug,
+    cancelled: faTasks,
   };
 
   const getInitialsIcon = (initials) => {
     // Here you would create a custom SVG or use an existing icon for initials
     return (
-      <div className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center text-white">
+      <div className="bg-gray-400 rounded-full w-6 h-6 flex items-center justify-center text-white">
         {initials}
       </div>
     );
