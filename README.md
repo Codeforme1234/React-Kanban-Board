@@ -6,11 +6,10 @@ This interactive Kanban board application is built using Vite, React, and Tailwi
 
 Features:-
 
-Group Tickets:  By Status, User, or Priority.
-Sort Tickets:  By Priority (descending) or Title (ascending).
-Responsive Design:  Adapts to various screen sizes.
-State Persistence:  Saves user view state after page reload.
-Priority Levels:  Urgent, High, Medium, Low, No Priority.
+Group Tickets:  By Status, User, or Priority.  
+Sort Tickets:  By Priority (descending) or Title (ascending).  
+Responsive Design:  Adapts to various screen sizes.    
+Priority Levels:  Urgent, High, Medium, Low, No Priority.  
 
 Installation and Running the App:-
 
